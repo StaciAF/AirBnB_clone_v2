@@ -134,7 +134,8 @@ class HBNBCommand(cmd.Cmd):
                 if i != len(args) - 1:
                     dct.append(', ')
             dct.append('}')
-            self.do_update(args[0] + ' ' + new_instance.id + ' ' + "".join(dct))
+            self.do_update(args[0] + ' ' + new_instance.id + ' ' + "".
+                           join(dct))
         storage.save()
 
     def help_create(self):

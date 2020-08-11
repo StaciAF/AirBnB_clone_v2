@@ -58,3 +58,5 @@ class FileStorage:
         key = str(obj.to_dict()['__class__'] + '.' + obj.id)
         if key in self.__objects:
             self.__objects.pop(key)
+            self.save()
+            self.reload()

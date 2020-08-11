@@ -13,7 +13,7 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         else:
-            return ({x:y for (x, y) in self.__objects.items() if type(y)
+            return ({x: y for (x, y) in self.__objects.items() if type(y)
                      is cls})
 
     def new(self, obj):

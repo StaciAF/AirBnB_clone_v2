@@ -28,14 +28,19 @@ class DBStorage:
         from models.state import State
         from models.city import City
         if cls is None:
-            return self.__session.query(State, City).all()
+            return self.__session.query('states', 'cities').all()
         else:
-            return self.__session.query(cls).all()
+            classes = {"State": State, "City": City}
+            print("BUGCHECK")
+            d_list = (self.__session.query(classes[cls]).all())
+            return ({obj.to_dict()['__class__'] + '.' + obj.id: obj for
+                     obj in d_list})
 
     def new(self, obj):
         '''Adds an object to the database'''
         self.__session.add(obj)
         self.save()
+        self.reload()
 
     def save(self):
         '''commit all changes of the current database session'''

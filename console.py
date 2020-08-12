@@ -124,10 +124,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args[0]]()
+        print(new_instance.id)
         if getenv('HBNB_TYPE_STORAGE') != 'db':
             new_instance.save()
             storage.save()
-            print(new_instance.id)
             if len(args) > 1:
                 dct = ['{']
                 for i in range(1, len(args)):
@@ -227,11 +227,10 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage.all():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            for k, v in storage.all(args).items():
+                print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)

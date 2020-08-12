@@ -28,7 +28,8 @@ class DBStorage:
         from models.state import State
         from models.city import City
         if cls is None:
-            return self.__session.query('states', 'cities').all()
+            return self.__session.query(State, City).filter(
+                State.id == City.state_id).all()
         else:
             classes = {"State": State, "City": City}
             print("BUGCHECK")

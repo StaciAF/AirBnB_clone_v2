@@ -19,20 +19,32 @@ class DBStorage:
                                       '@' + host + ':3306/' + db,
                                       pool_pre_ping=True)
         conc = self.__engine.connect()
-        if getenv('HBNB_ENV') == 'test':
-            conc.drop_all(checkfirst=False)
+        #if getenv('HBNB_ENV') == 'test':
+        from models.base_model import Base
+        Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         '''query on the current database session all objects depending
         on the class name'''
         from models.state import State
         from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        from models.place import Place
+        from models.user import User
+        import console
         if cls is None:
-            return self.__session.query(State, City).filter(
-                State.id == City.state_id).all()
+            res = []
+            for clas in console.HBNBCommand.classes:
+                if clas != 'BaseModel':
+                    res.extend(self.__session.query(eval(clas)).all())
+            res_dct = {}
+            for obj in res:
+                res_dct.update({"{}.{}".format(obj.__class__.name, obj.id):
+                                obj})
+            return res_dct
         else:
-            classes = {"State": State, "City": City}
-            d_list = (self.__session.query(classes[cls]).all())
+            d_list = (self.__session.query(eval(cls)).all())
             return ({obj.to_dict()['__class__'] + '.' + obj.id: obj for
                      obj in d_list})
 

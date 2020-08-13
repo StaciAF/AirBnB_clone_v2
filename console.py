@@ -220,6 +220,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
+        from os import getenv
         print_list = []
 
         if args:

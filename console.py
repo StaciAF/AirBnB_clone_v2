@@ -133,7 +133,6 @@ class HBNBCommand(cmd.Cmd):
                 for i in range(1, len(args)):
                     tmp = args[i].split('=')
                     tmp[1] = tmp[1].replace('_', ' ')
-                    tmp[1] = tmp.replace('"', '\\"')
                     dct.append('"' + tmp[0] + '": ' + tmp[1])
                     if i != len(args) - 1:
                         dct.append(', ')

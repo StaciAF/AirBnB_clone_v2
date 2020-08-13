@@ -115,6 +115,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        from os import getenv
         args = args.split()
         if not args:
             print("** class name missing **")
@@ -123,20 +124,28 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args[0]]()
-        new_instance.save()
-        storage.save()
         print(new_instance.id)
-        if len(args) > 1:
-            dct = ['{']
-            for i in range(1, len(args)):
+        if getenv('HBNB_TYPE_STORAGE') != 'db':
+            new_instance.save()
+            storage.save()
+            if len(args) > 1:
+                dct = ['{']
+                for i in range(1, len(args)):
+                    tmp = args[i].split('=')
+                    tmp[1] = tmp[1].replace('_', ' ')
+                    tmp[1] = tmp.replace('"', '\\"')
+                    dct.append('"' + tmp[0] + '": ' + tmp[1])
+                    if i != len(args) - 1:
+                        dct.append(', ')
+                dct.append('}')
+                self.do_update(args[0] + ' ' + new_instance.id + ' ' + "".
+                               join(dct))
+        else:
+            for i in range (1, len(args)):
                 tmp = args[i].split('=')
                 tmp[1] = tmp[1].replace('_', ' ')
-                dct.append('"' + tmp[0] + '": ' + tmp[1])
-                if i != len(args) - 1:
-                    dct.append(', ')
-            dct.append('}')
-            self.do_update(args[0] + ' ' + new_instance.id + ' ' + "".
-                           join(dct))
+                setattr(new_instance, tmp[0], tmp[1])
+            new_instance.save()
         storage.save()
 
     def help_create(self):
@@ -219,11 +228,10 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            for k, v in storage.all(args).items():
+                print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)

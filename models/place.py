@@ -14,9 +14,6 @@ place_amenity = Table('place_amenity', Base.metadata, Column('place_id',
 class Place(BaseModel, Base):
     """ defines class Place with multiple attributes """
     __tablename__ = 'places'
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
-        review = relationship('Review', cascade='all, delete, delete-orphan', backref='place')
-        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     name = Column(String(128), nullable=False)
@@ -27,14 +24,33 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    else:
-        @property
-        def reviews(self):
-            """ returns a list of Review objects with place_id matching Place.id """
-            from models import storage
-            return self.reviews
-        @property
-        def amenities(self):
-            """ returns a list of Amenity objects with amenity_id matching Amenity.id """
-            from models import storage
-            return self.amenities
+    amenity_ids = []
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        review = relationship('Review', cascade='all, delete, delete-orphan', backref='place')
+        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
+
+    @property
+    def reviews(self):
+        """ returns a list of Review objects with place_id matching Place.id """
+        from models import storage
+        rev_obj_lst = []
+        for review in models.storage.all(Review).values():
+            if review.place_id == self.id:
+                rev_obj_lst.append(review)
+        return rev_obj_list
+
+    @property
+    def amenities(self):
+        """ returns a list of Amenity objects with amenity_id matching Amenity.id """
+        from models import storage
+        amnty_obj_lst = []
+        for amenity in models.storage.all(Amenity).values():
+            if amenity.id == self.amenity_ids:
+                amnty_obj_lst.append(amenity)
+        return amnty_obj_list
+
+    @amenities.setter
+    def amenities(self, value):
+        """ adds Amenity.id to attribute amenity_ids """
+        if value is of type(Amenity):
+            self.amenity_ids.append(value.id)

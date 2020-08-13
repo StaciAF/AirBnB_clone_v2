@@ -37,7 +37,7 @@ class test_fileStorage(unittest.TestCase):
 
     def test_aac_all(self):
         """ storage is properly returned """
-        new = State(name="tmp")
+        new = State(**{"name": "tmp"})
         storage.new(new)
         storage.save()
         temp = storage.all()

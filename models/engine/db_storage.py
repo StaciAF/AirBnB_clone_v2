@@ -27,11 +27,12 @@ class DBStorage:
         on the class name'''
         from models.state import State
         from models.city import City
+        from models.user import User
         if cls is None:
             return self.__session.query(State, City).filter(
                 State.id == City.state_id).all()
         else:
-            classes = {"State": State, "City": City}
+            classes = {"State": State, "City": City, "User": User}
             d_list = (self.__session.query(classes[cls]).all())
             return ({obj.to_dict()['__class__'] + '.' + obj.id: obj for
                      obj in d_list})

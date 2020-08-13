@@ -133,6 +133,8 @@ class HBNBCommand(cmd.Cmd):
                 for i in range(1, len(args)):
                     tmp = args[i].split('=')
                     tmp[1] = tmp[1].replace('_', ' ')
+                    tmp[1] = tmp[1].strip('"')
+                    tmp[1] = tmp[1].replace('\\"', '"')
                     dct.append('"' + tmp[0] + '": ' + tmp[1])
                     if i != len(args) - 1:
                         dct.append(', ')
@@ -143,6 +145,8 @@ class HBNBCommand(cmd.Cmd):
             for i in range (1, len(args)):
                 tmp = args[i].split('=')
                 tmp[1] = tmp[1].replace('_', ' ')
+                tmp[1] = tmp[1].strip('"')
+                tmp[1] = tmp[1].replace('\\"', '"')
                 setattr(new_instance, tmp[0], tmp[1])
             new_instance.save()
         storage.save()
@@ -233,7 +237,7 @@ class HBNBCommand(cmd.Cmd):
             for k, v in storage.all().items():
                 print_list.append(str(v))
 
-        print(print_list)
+        print('[' + "".join(print_list) + ']')
 
     def help_all(self):
         """ Help information for the all command """

@@ -142,7 +142,7 @@ class HBNBCommand(cmd.Cmd):
                 self.do_update(args[0] + ' ' + new_instance.id + ' ' + "".
                                join(dct))
         else:
-            for i in range (1, len(args)):
+            for i in range(1, len(args)):
                 tmp = args[i].split('=')
                 tmp[1] = tmp[1].replace('_', ' ')
                 tmp[1] = tmp[1].strip('"')

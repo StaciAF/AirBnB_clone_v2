@@ -140,7 +140,7 @@ class HBNBCommand(cmd.Cmd):
                 self.do_update(args[0] + ' ' + new_instance.id + ' ' + "".
                                join(dct))
         else:
-            for i in range (1, len(args)):
+            for i in range(1, len(args)):
                 tmp = args[i].split('=')
                 tmp[1] = tmp[1].replace('_', ' ')
                 setattr(new_instance, tmp[0], tmp[1])
@@ -220,6 +220,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
+        from os import getenv
         print_list = []
 
         if args:

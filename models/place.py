@@ -6,9 +6,13 @@ from sqlalchemy.orm import relationship
 from os import getenv
 
 
-place_amenity = Table('place_amenity', Base.metadata, Column('place_id',
-        String(60), ForeignKey('places.id'), nullable=False, primary_key=True),
-        Column('amenity_id', String(60), ForeignKey('amenities.id'), nullable=False, primary_key=True))
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'), nullable=False,
+                             primary_key=True),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             nullable=False, primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -26,12 +30,14 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=False)
     amenity_ids = []
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        review = relationship('Review', cascade='all, delete, delete-orphan', backref='place')
-        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
+        review = relationship('Review', cascade='all, delete, delete-orphan',
+                              backref='place')
+        amenities = relationship('Amenity', secondary=place_amenity,
+                                 viewonly=False)
 
     @property
     def reviews(self):
-        """ returns a list of Review objects with place_id matching Place.id """
+        """ returns a list of Review objects with place_id matching Place.id"""
         from models import storage
         rev_obj_lst = []
         for review in models.storage.all(Review).values():
@@ -41,7 +47,8 @@ class Place(BaseModel, Base):
 
     @property
     def amenities(self):
-        """ returns a list of Amenity objects with amenity_id matching Amenity.id """
+        """ returns a list of Amenity objects with amenity_id matching
+        Amenity.id """
         from models import storage
         amnty_obj_lst = []
         for amenity in models.storage.all(Amenity).values():

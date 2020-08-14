@@ -19,9 +19,9 @@ class DBStorage:
                                       '@' + host + ':3306/' + db,
                                       pool_pre_ping=True)
         conc = self.__engine.connect()
-        #if getenv('HBNB_ENV') == 'test':
-        from models.base_model import Base
-        Base.metadata.drop_all(bind=self.__engine)
+        if getenv('HBNB_ENV') == 'test':
+            from models.base_model import Base
+            Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         '''query on the current database session all objects depending
@@ -44,7 +44,6 @@ class DBStorage:
                                 obj})
             return res_dct
         else:
-            classes = {"State": State, "City": City, "User": User}
             d_list = (self.__session.query(eval(cls)).all())
             return ({obj.to_dict()['__class__'] + '.' + obj.id: obj for
                      obj in d_list})

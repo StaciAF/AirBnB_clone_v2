@@ -16,14 +16,14 @@ class test_review(test_basemodel):
     def test_place_id(self):
         """ """
         new = self.value()
-        self.assertTrue(hasattr(new, place_id))
+        self.assertTrue(hasattr(new, 'place_id'))
 
     def test_user_id(self):
         """ """
         new = self.value()
-        self.assertTrue(hasattr(new, user_id))
+        self.assertTrue(hasattr(new, 'user_id'))
 
     def test_text(self):
         """ """
         new = self.value()
-        self.assertTrue(hasattr(new, text))
+        self.assertTrue(hasattr(new, 'text'))

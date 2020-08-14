@@ -33,9 +33,12 @@ class test_fileStorage(unittest.TestCase):
     def test_new(self):
         """ New object is correctly added to __objects """
         new = BaseModel()
+        new.save()
+        tmp = False
         for obj in storage.all().values():
-            temp = obj
-        self.assertTrue(temp is obj)
+            if new.id == obj.id:
+                tmp = True
+        self.assertTrue(tmp)
 
     def test_all(self):
         """ __objects is properly returned """
@@ -65,11 +68,14 @@ class test_fileStorage(unittest.TestCase):
     def test_reload(self):
         """ Storage file is successfully loaded to __objects """
         new = BaseModel()
+        new.save()
         storage.save()
         storage.reload()
+        tmp = False
         for obj in storage.all().values():
-            loaded = obj
-        self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
+            if obj.to_dict()['id'] == new.to_dict()['id']:
+                tmp = True
+        self.assertTrue(tmp)
 
     def test_reload_empty(self):
         """ Load from an empty file """
@@ -99,13 +105,16 @@ class test_fileStorage(unittest.TestCase):
     def test_key_format(self):
         """ Key is properly formatted """
         new = BaseModel()
+        new.save()
         _id = new.to_dict()['id']
-        for key in storage.all().keys():
-            temp = key
-        self.assertEqual(temp, 'BaseModel' + '.' + _id)
+        tmp = False
+        for key, val in storage.all().items():
+            if new.id == val.id:
+                if key == 'BaseModel.' + _id:
+                    tmp = True
+        self.assertTrue(tmp)
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
         from models.engine.file_storage import FileStorage
-        print(type(storage))
         self.assertEqual(type(storage), FileStorage)

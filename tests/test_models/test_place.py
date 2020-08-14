@@ -30,8 +30,6 @@ class test_Place(test_basemodel):
     def test_city_id(self):
         """ """
         new = self.value(**self.args)
-        print("BUGCHECK")
-        print("CITY:", hasattr(new, 'city_id'), getattr(new, 'city_id'), type(getattr(new, 'city_id')))
         self.assertEqual(type(new.city_id), str)
 
     def test_user_id(self):

@@ -29,7 +29,9 @@ class test_basemodel(unittest.TestCase):
 
     def test_default(self):
         """ """
-        i = self.value()
+        if self.value == BaseModel and os.getenv('HBNB_TYPE_STORAGE') == 'db':
+            unittest.SkipTest('BaseModel is not mapped')
+        i = self.value(**{'name': 'testcase'})
         self.assertEqual(type(i), self.value)
 
     def test_kwargs(self):

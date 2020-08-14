@@ -28,6 +28,7 @@ class BaseModel:
                     if type(kwargs[keys]) is str:
                         kwargs[keys] = datetime.strptime(kwargs[keys], form)
                 if not hasattr(self, keys):
+                    print(keys)
                     raise KeyError
             if '__class__' in kwargs.keys():
                 del kwargs['__class__']

@@ -33,7 +33,11 @@ class test_fileStorage(unittest.TestCase):
         new = State(**{'name': "Oklahoma"})
         storage.new(new)
         storage.save()
-        self.assertTrue(new in storage.all().values())
+        tmp = False
+        for item in storage.all().values():
+            if new.id == item.id:
+                tmp = True
+        self.assertTrue(tmp)
 
     def test_aac_all(self):
         """ storage is properly returned """

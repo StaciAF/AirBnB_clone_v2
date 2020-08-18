@@ -10,7 +10,7 @@ from datetime import datetime
 from os import path
 
 
-env.hosts = ['184.72.66.167', '35.196.13.145']
+env.hosts = ['35.196.13.145', '184.72.66.167']
 
 
 def do_pack():
@@ -34,7 +34,6 @@ def do_deploy(archive_path):
     """ distributes a packed archive to web servers """
     if path.exists(archive_path) is False:
         return False
-    print(env.port)
     alt_path = archive_path[9:]
     arch_folder = "/data/web_static/releases/" + alt_path[:-4]
     new_file = "/tmp/" + alt_path
@@ -56,3 +55,11 @@ def do_deploy(archive_path):
     return run("sudo ln -sf {} /data/web_static/current".format(arch_folder))
     print("New version deployed")
     return True
+
+
+def deploy():
+    """ deploys web_static folder """
+    returned_p = do_pack()
+    if returned_p is None:
+        return False
+    return do_deploy(returned_p)

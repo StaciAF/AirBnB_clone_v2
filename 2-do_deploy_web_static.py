@@ -38,21 +38,15 @@ def do_deploy(archive_path):
     alt_path = archive_path[9:]
     arch_folder = "/data/web_static/releases/" + alt_path[:-4]
     new_file = "/tmp/" + alt_path
-    if put(archive_path, "/tmp/").failed:
+    try:
+        put(archive_path, "/tmp/")
+        run("sudo mkdir -p {}".format(arch_folder))
+        run("sudo tar -xzf {} -C {}".format(new_file, arch_folder))
+        run("sudo rm -rf {}".format(new_file))
+        run("sudo mv {}/web_static/*{}".format(arch_folder, arch_folder))
+        run("sudo rm -rf {}/web_static".format(arch_folder))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -sf {} /data/web_static/current".format(arch_folder))
+        return True
+    except:
         return False
-    if run("sudo mkdir -p {}".format(arch_folder)).failed:
-        return False
-    if run("sudo tar -xzf {} -C {}".format(new_file, arch_folder)).failed:
-        return False
-    if run("sudo rm -rf {}".format(new_file)).failed:
-        return False
-    if run("sudo mv {}/web_static/*{}".format(arch_folder,
-                                              arch_folder)).failed:
-        return False
-    if run("sudo rm -rf {}/web_static".format(arch_folder)).failed:
-        return False
-    if run("sudo rm -rf /data/web_static/current").failed:
-        return False
-    return run("sudo ln -sf {} /data/web_static/current".format(arch_folder))
-    print("New version deployed")
-    return True

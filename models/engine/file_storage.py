@@ -62,3 +62,7 @@ class FileStorage:
             FileStorage.__objects.pop(key)
             self.save()
             self.reload()
+
+    def close(self):
+        """ public method for deserializing JSON file objects """
+        self.reload()

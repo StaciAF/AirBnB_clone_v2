@@ -33,20 +33,17 @@ class DBStorage:
         from models.place import Place
         from models.user import User
         import console
-        if cls is None:
-            res = []
-            for clas in console.HBNBCommand.classes:
-                if clas != 'BaseModel':
-                    res.extend(self.__session.query(eval(clas)).all())
-            res_dct = {}
-            for obj in res:
-                res_dct.update({"{}.{}".format(obj.__class__.name, obj.id):
-                                obj})
-            return res_dct
-        else:
-            d_list = (self.__session.query(eval(cls)).all())
-            return ({obj.to_dict()['__class__'] + '.' + obj.id: obj for
-                     obj in d_list})
+        classes = {"Amenity": Amenity, "City": City,
+                   "Place": Place, "Review": Review,
+                   "State": State, "User": User}
+        all_dict = {}
+        for each in classes:
+            if cls is None or cls == each:
+                objects = self.__session.query(classes[each]).all()
+                for obj in objects:
+                    new_key = obj.__class__.__name__ + '.' + obj.id
+                    all_dict[key] = obj
+        return (all_dict)
 
     def new(self, obj):
         '''Adds an object to the database'''
@@ -82,3 +79,7 @@ class DBStorage:
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """ public method to close class Session """
+        self.__session.close()

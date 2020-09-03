@@ -4,7 +4,6 @@ module notes, son
 """
 if __name__ == '__main__':
     from flask import Flask, render_template
-    from models import storage
     app = Flask(__name__)
 
     @app.route("/states_list", strict_slashes=False)
@@ -17,6 +16,7 @@ if __name__ == '__main__':
     @app.route("/cities_by_states", strict_slashes=False)
     def cit_by_state():
         """ pulls data from storage for HTML page """
+        from models import storage
         get_states = storage.all("State")
         state_res = get_states.values()
         return render_template("8-cities_by_states.html", state_res=state_res)

@@ -3,7 +3,6 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models.city import City
 
 
 class State(BaseModel, Base):
@@ -18,8 +17,14 @@ class State(BaseModel, Base):
         '''
         Returns a list of City objects from storage linked to State
         '''
+        from models.city import City
+        from models import storage
+
         city_list = []
-        for key, val in models.storage.all().items():
-            if val.state_id == self.id:
-                city_list.append(val)
+        for key, val in storage.all().items():
+            try:
+                if val.state_id == self.id:
+                    city_list.append(val)
+            except AttributeError:
+                pass
         return city_list
